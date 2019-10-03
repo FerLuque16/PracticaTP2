@@ -3,7 +3,7 @@
 #include "input.h"
 #include "ArrayEmployees.h"
 
-#define CANT_EMPLOYEES 1000
+#define CANT_EMPLOYEES 3
 #define CANT_SECTOR 4
 
 
@@ -11,9 +11,8 @@ int main()
 {
     eEmployee emp[CANT_EMPLOYEES];
     int opc;
-    int seguir=0;
-    float salary;
-    char letra;
+    int status,removed;
+    int contadorEmp=0;
 
 
     initEmployees(emp,CANT_EMPLOYEES);
@@ -22,62 +21,84 @@ int main()
     {
         system("cls");
 
-        getInt(&opc,"1. Altas\n2. Modificar\n3. Baja\n4. Informar\n5. Salir\n","Opcion no valida",1,5);
-        /*printf("1. Alta\n");
-        printf("2. Baja\n");
-        printf("3. Modificar\n");
-        printf("4. String\n");
-        printf("5. Salir\n");*/
-
-
-        //scanf("%d" ,&opc);
+        getInt(&opc,"1. Altas\n2. Modificar\n3. Baja\n4. Listar\n5. Salir\n","Opcion no valida",1,5);
 
         switch(opc)
         {
             case 1:
-                addEmployee(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
-
-                    mostrar(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                status=addEmployee(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                if(status==0)
+                {
+                    contadorEmp++;
+                    system("cls");
+                    printf("Se ha dado de alta con exito");
                     system("pause");
+                }
 
-
-
-
+                    //mostrar(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                    //mostrarTodos(emp,CANT_EMPLOYEES);
+                    system("pause");
                 break;
 
             case 2:
 
-                if(getFloat(&salary,"Ingrese salario\n","ERROR\n",1,100000)==0)
+                if(contadorEmp>0)
                 {
-                    printf("%.2f" ,salary);
+                    modificar(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                }
+                else
+                {
+                    printf("\nNo hay empleados cargados\n ");
                     system("pause");
                 }
-
 
                 break;
 
             case 3:
-                if(getChar(&letra,"Ingrese una letra\n","ERROR\n",'a','e')==0)
+                if(contadorEmp>0)
                 {
-                    printf("%c\n" ,letra);
+                    sortEmployee(emp,CANT_EMPLOYEES,1);
+                    mostrarTodos(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                    removed=removeEmployee(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                    if(removed==0)
+                    {
+                    contadorEmp--;
+                    }
+                }
+                else
+                {
+                    printf("\nNo hay empleados cargados\n ");
                     system("pause");
                 }
                 break;
 
             case 4:
-                removeEmployee(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                if(contadorEmp>0)
+                {
+                    sortEmployee(emp,CANT_EMPLOYEES,1);
+                    mostrarTodos(emp,CANT_EMPLOYEES,sector,CANT_SECTOR);
+                    calculateSalaryInfo(emp,CANT_EMPLOYEES);
+
+                }
+                else
+                {
+                    printf("\nNo hay empleados cargados\n ");
+                    system("pause");
+                }
+
                 break;
 
             case 5:
-                seguir=1;
+                opc=5;
+
                 break;
 
-            default:
-                break;
 
         }
 
-    }while(seguir!=1);
+    }while(opc!=5);
     return 0;
 }
+
+
 
